@@ -20,6 +20,18 @@ En Postman configuré la colección con **Bearer Token** mediante `{{token}}`. A
 
 La autenticación identifica al usuario; la autorización determina qué operaciones puede realizar. Para las operaciones de escritura, el backend exige permisos específicos, aunque la sesión sea válida.
 
+### Evidencias del acceso inicial
+
+Antes de configurar el token, la consulta a `GET /api/system/runtime-config` devolvió **401 Unauthorized**. Esta captura muestra la respuesta del servidor; no corresponde a un error de conexión.
+
+![401 Unauthorized al consultar runtime-config](imagenes/auth_401_unauthorized.png)
+
+También comprobé que `GET /api/auth/google` devolvía **302 Found**, iniciando el flujo de redirección a Google. Después del inicio de sesión pude obtener el token y utilizarlo como Bearer en Postman.
+
+La misma captura muestra el `302 Found` de Google en la consola de Postman.
+
+Estas dos capturas documentan el contraste entre una solicitud sin acceso autorizado y el inicio del proceso de autenticación. El resultado `200 OK` de las consultas posteriores se muestra en las siguientes secciones.
+
 ## GET – Configuración del sistema
 
 **Endpoint:** `GET /api/system/runtime-config`
