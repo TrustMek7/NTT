@@ -1,0 +1,186 @@
+{
+  "info": {
+    "_postman_id": "7f0f04e0-8893-4f60-aad8-1ea729d47398",
+    "name": "Práctica - NTT Postman",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "35348793"
+  },
+  "item": [
+    {
+      "name": "GET - Consultar configuración del sistema",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\nconst data = pm.response.json();\r\n\r\npm.test(\"GET - Status code 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"La respuesta contiene una versión\", function () {\r\n    pm.expect(data.version).to.be.a(\"number\");\r\n});\r\n\r\npm.test(\"La respuesta contiene configuración de mantenimiento\", function () {\r\n    pm.expect(data.maintenance).to.be.an(\"object\");\r\n    pm.expect(data.maintenance.enabled).to.be.a(\"boolean\");\r\n});\r\n\r\npm.test(\"El esquema de usuarios está definido\", function () {\r\n    pm.expect(data.schemaRouting.userSchema).to.be.a(\"string\");\r\n    pm.expect(data.schemaRouting.userSchema).to.not.be.empty;\r\n});\r\n\r\nif (pm.response.code === 200 && data.schemaRouting?.userSchema) {\r\n    pm.environment.set(\"schema\", data.schemaRouting.userSchema);\r\n}\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/system/runtime-config",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "system",
+            "runtime-config"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET - Consultar Esquemas",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\nconst data = pm.response.json();\r\n\r\npm.test(\"GET - Status code 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"La respuesta es JSON\", function () {\r\n    pm.response.to.be.json;\r\n});\r\n\r\npm.test(\"La respuesta contiene datos\", function () {\r\n    pm.expect(data).to.exist;\r\n});\r\n\r\nif (pm.response.code === 200) {\r\n    pm.environment.set(\"esquemas\", JSON.stringify(data));\r\n}\r\n\r\nconsole.log(\"Esquemas obtenidos:\", data);\r\nconsole.log(\"Esquema activo:\", pm.environment.get(\"schema\"));\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/system/schemas",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "system",
+            "schemas"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET - Cursos",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\nconst data = pm.response.json();\r\n\r\npm.test(\"GET - Status code 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"La respuesta contiene una lista de cursos\", function () {\r\n    pm.expect(data).to.be.an(\"array\");\r\n});\r\n\r\nconsole.log(\"Cursos obtenidos:\", data);\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/courses",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "courses"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "POST - Crear curso",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\npm.test(\"POST - Status code 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\nconst data = pm.response.json();\r\n\r\npm.test(\"La respuesta contiene un mensaje de error\", function () {\r\n    pm.expect(data.message).to.be.a(\"string\");\r\n});\r\n\r\nconsole.log(\"Respuesta:\", data);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Curso Prueba NTT 2026\",\r\n  \"color\": \"#4287F5\",\r\n  \"description\": \"Curso de prueba para Postman\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/courses",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "courses"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "DELETE - Curso",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "\r\nconst data = pm.response.json();\r\n\r\npm.test(\"DELETE - Status code 400\", function () {\r\n    pm.response.to.have.status(400);\r\n});\r\n\r\npm.test(\"La respuesta contiene un error de validación\", function () {\r\n    pm.expect(data.message).to.be.a(\"string\");\r\n});\r\n\r\nconsole.log(\"Respuesta DELETE:\", data);\r\n"
+            ]
+          }
+        },
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const cursoId = pm.environment.get(\"cursoId\");\r\n\r\nif (!cursoId || !/^\\d+$/.test(String(cursoId))) {\r\n    throw new Error(\"Debes configurar un cursoId numérico válido\");\r\n}"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/api/courses/{{cursoId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "courses",
+            "{{cursoId}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  }
+}
