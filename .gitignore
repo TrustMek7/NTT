@@ -1,0 +1,18 @@
+# Dependencias de Node.js (en cualquier ejercicio)
+node_modules/
+
+# Archivos locales y secretos
+.env
+.env.*
+!.env.example
+!.env.sample
+*.log
+
+# Archivos generados de Java
+target/
+*.class
+
+# Configuracion local del editor y del sistema
+.idea/
+.DS_Store
+Thumbs.db
