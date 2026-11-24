@@ -10,8 +10,7 @@ import net.serenitybdd.screenplay.actors.OnStage;
 import net.serenitybdd.screenplay.actors.OnlineCast;
 import net.serenitybdd.screenplay.rest.abilities.CallAnApi;
 import org.example.Questions.ResponseCode;
-import org.example.Tasks.GetAllProducts;
-import org.example.Tasks.GetProductById;
+import org.example.Tasks.GetProducts;
 
 import java.util.List;
 import java.util.Map;
@@ -39,17 +38,17 @@ public class ProductStepDefinition {
 
     @When("el {actor} consulta todos los productos")
     public void elActorConsultaTodosLosProductos(Actor actor) {
-        actor.attemptsTo(GetAllProducts.fromEndpoint("/products"));
+        actor.attemptsTo(GetProducts.fromEndpoint("/products"));
     }
 
     @When("el {actor} consulta los primeros cinco productos")
     public void elActorConsultaLosPrimerosCincoProductos(Actor actor) {
-        actor.attemptsTo(GetAllProducts.fromEndpoint("/products?limit=5"));
+        actor.attemptsTo(GetProducts.fromEndpoint("/products?limit=5"));
     }
 
     @When("el {actor} consulta el producto con ID {string}")
     public void elActorConsultaElProductoConId(Actor actor, String productId) {
-        actor.attemptsTo(GetProductById.withId(productId));
+        actor.attemptsTo(GetProducts.fromEndpoint("/products/" + productId));
     }
 
     @Then("el código de respuesta debe ser {int}")

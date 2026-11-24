@@ -8,15 +8,15 @@ import net.serenitybdd.screenplay.rest.interactions.Get;
 
 import static net.serenitybdd.screenplay.Tasks.instrumented;
 
-public class GetAllProducts implements Task {
+public class GetProducts implements Task {
     private final String endpoint;
 
-    public GetAllProducts(String endpoint) {
+    public GetProducts(String endpoint) {
         this.endpoint = endpoint;
     }
 
     public static Performable fromEndpoint(String endpoint) {
-        return instrumented(GetAllProducts.class, endpoint);
+        return instrumented(GetProducts.class, endpoint);
     }
 
     @Override
