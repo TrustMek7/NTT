@@ -13,7 +13,7 @@ Los cuatro escenarios son de solo lectura: tres positivos y uno negativo. Cada u
 
 ## Requisitos
 
-- JDK 17 o superior.
+- JDK 17.
 - Maven 3.8 o superior.
 - Acceso a internet para Maven y Restful-Booker.
 
