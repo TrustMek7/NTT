@@ -1,54 +1,60 @@
 # Automatización de API de productos
 
-Proyecto de pruebas de API con Java 17, Maven, Cucumber y Serenity Screenplay. Las pruebas consultan el catálogo de práctica DummyJSON: `https://dummyjson.com/docs/products`.
+Proyecto de pruebas de API con Java 17, Maven, Cucumber y Serenity Screenplay. Se valida el catálogo de práctica [DummyJSON](https://dummyjson.com/docs/products).
 
-## Cobertura
+## Informe breve
 
-Se automatizan dos endpoints de consulta:
+La suite cubre dos endpoints de lectura y cuatro escenarios:
 
-- `GET /products`: consulta el catálogo completo y valida la paginación con `limit=5`.
-- `GET /products/{id}`: consulta un producto existente y prueba el caso negativo de un ID inexistente (`404`).
+| Escenario | Tipo | Resultado esperado | Validaciones principales |
+| --- | --- | --- | --- |
+| Consultar el catálogo completo | Positivo | `200 OK` | Arreglo `products` presente y no vacío; total mayor que cero |
+| Consultar productos con límite | Positivo | `200 OK` | Se reciben cinco productos y `limit` vale `5` |
+| Consultar un producto existente | Positivo | `200 OK` | ID esperado, título no vacío y precio positivo |
+| Consultar un producto inexistente | Negativo | `404 Not Found` | El servicio rechaza el ID inexistente |
 
-Los cuatro escenarios son de solo lectura: tres positivos y uno negativo. Cada uno valida el código HTTP y contenido relevante de la respuesta.
+**Ejecución verificada:** `mvn clean verify`, con JDK 17.0.2. Resultado: **4 escenarios aprobados, 0 fallidos y 0 con errores**. En el escenario negativo, recibir `404` es el comportamiento esperado, por eso también cuenta como prueba aprobada.
 
-## Resultados
+La salida HTML completa de Serenity se genera en `target/site/serenity/index.html`. La carpeta `target` se excluye de Git; las evidencias visuales se conservan en `evidencias/`.
 
-La ejecución `mvn clean verify` con JDK 17.0.2 terminó correctamente:
+### Resultados de Serenity
 
-- 4 escenarios ejecutados.
-- 3 escenarios positivos y 1 negativo.
-- 4 aprobados, 0 fallidos y 0 con errores.
-- El escenario negativo confirma que un ID inexistente responde con `404`.
+![Pestaña Test Results: cuatro escenarios aprobados](evidencias/reporte-serenity-resultados.png)
 
-La captura de la pestaña **Test Results** muestra los cuatro escenarios aprobados: [reporte-serenity-resultados.png](evidencias/reporte-serenity-resultados.png).
+### Resumen del reporte
+
+![Resumen completo del reporte Serenity](evidencias/reporte-serenity-resumen.png)
+
+### Detalle de un escenario
+
+![Detalle de la consulta exitosa de un producto](evidencias/reporte-serenity-detalle.png)
 
 ## Decisiones de diseño
 
-- **Cucumber** expresa los criterios en Gherkin para que cada escenario describa una consulta y su resultado esperado.
-- **Serenity Screenplay** separa los pasos de Cucumber de las solicitudes REST. Como el proyecto solo usa el verbo `GET`, una única Task (`GetProducts`) recibe la ruta y sirve para el catálogo, la paginación y el detalle, cumpliendo la pauta de una Task por verbo HTTP utilizado.
-- La Question `ResponseCode` centraliza la lectura del estado HTTP; los pasos `Then` agregan aserciones del contenido específico de cada respuesta.
-- Se eligió una API de datos de prueba y consultas de solo lectura para evitar modificar registros remotos. Los dos endpoints cubiertos son `/products` y `/products/{id}`; `limit=5` es una variante de consulta del primero.
+### API y alcance
 
-## Requisitos
+Se eligió DummyJSON porque ofrece un catálogo de datos de práctica con consultas de lista, paginación y detalle. El proyecto usa dos endpoints: `GET /products` y `GET /products/{id}`. `?limit=5` es un parámetro del endpoint de catálogo, no una tercera ruta. Todas las operaciones son de lectura: la suite no crea, modifica ni elimina datos remotos.
+
+### Cucumber y Screenplay
+
+- **Cucumber/Gherkin** presenta los cuatro casos como criterios de aceptación legibles: tres respuestas válidas y el rechazo de un ID inexistente.
+- **Step definitions** conectan cada paso Given/When/Then con las acciones y comprobaciones; no contienen la construcción directa de la solicitud HTTP.
+- **Screenplay Task `GetProducts`** encapsula el verbo HTTP `GET` y recibe la ruta a consultar. Se reutiliza para la lista, la paginación y el detalle; al incorporar otro verbo en el futuro, correspondería agregar una Task para ese verbo.
+- **Question `ResponseCode`** centraliza la lectura del estado HTTP, mientras los pasos `Then` validan los campos que importan para cada respuesta. Así se comprueba tanto el protocolo como los datos entregados.
+- **Serenity** registra escenarios, pasos y resultados en el reporte HTML para revisar la ejecución y respaldar la demo.
+
+Este alcance cumple el mínimo de dos endpoints, tres escenarios positivos, uno negativo y aserciones sobre contenido. También mantiene la ejecución segura frente a datos compartidos al limitarla a consultas.
+
+## Requisitos y ejecución
 
 - JDK 17.
 - Maven 3.8 o superior.
-- Acceso a internet para Maven y DummyJSON.
+- Acceso a internet para descargar dependencias y consultar DummyJSON.
 
-## Ejecutar
-
-Desde la carpeta del proyecto:
+Desde la carpeta del proyecto, ejecuta:
 
 ```sh
 mvn clean verify
 ```
 
-El reporte HTML de Serenity se genera en `target/site/serenity/index.html`. Ábrelo en el navegador para revisar el resumen, cada escenario y sus solicitudes/respuestas.
-
-## Evidencias
-
-Las capturas completas del reporte están en `evidencias/`:
-
-- [Resumen del reporte](evidencias/reporte-serenity-resumen.png)
-- [Resultados de los cuatro escenarios](evidencias/reporte-serenity-resultados.png)
-- [Detalle de un escenario aprobado](evidencias/reporte-serenity-detalle.png)
+Después abre `target/site/serenity/index.html` en el navegador para revisar el resumen, los escenarios y sus solicitudes/respuestas.
