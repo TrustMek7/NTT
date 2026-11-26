@@ -10,6 +10,7 @@ Repositorio de proyectos individuales, ejercicios y prácticas desarrollados dur
 | [Clase141126](Clase141126/README.md) | Aplicación de consola para gestionar estudiantes. | Java, Maven, JUnit |
 | [Practica1411](Practica1411/README.md) | Proyecto inicial para practicar la estructura de una aplicación Java con Maven. | Java, Maven, JUnit |
 | [Practica211126](Practica211126/README.md) | Automatización de pruebas de API para catálogo y detalle de productos, con Cucumber y Serenity. | Java 17, Maven, Cucumber, Serenity Screenplay |
+| [Practica221126](Practica221126/README.md) | Automatización web del registro e inicio de sesión de SolarWear con Serenity Screenplay. | Java 17, Maven, Cucumber, Serenity, Selenium |
 
 Cada proyecto contiene su propia descripción e instrucciones de uso.
 
